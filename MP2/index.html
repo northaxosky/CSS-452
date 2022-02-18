@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MP2 : One Slice Through The Engine</title>
+        <link rel ="icon" type ="image/x-icon" href="./favicon.jpg">
+
+        <!-- the following says there are javascript source code contained in 
+            the external source files
+        -->
+        <!-- external library -->
+        <script type="text/javascript" src="src/lib/gl-matrix.js"></script>
+
+        <!-- our game -->
+        <script type="module" src="./src/my_game/my_game.js"></script>
+        <script>
+
+            // Declare important variables
+            let mCount = 0;
+            let mMaxUpdatePerDraw = 1;
+            let mTotalUpdates = 0;
+            let mMaxLagTime = 0;
+            let mTotalLag = 0;
+
+            function gUpdateFrame(elapsed, numUpdatePerDraw, lagTime)   {
+
+                mCount += 1;
+                mTotalLag += lagTime;
+                mTotalUpdates += numUpdatePerDraw;
+
+                if (numUpdatePerDraw > mMaxUpdatePerDraw)
+                    mMaxUpdatePerDraw = numUpdatePerDraw;
+                if (lagTime > mMaxLagTime)
+                    mMaxLagTime = lagTime;
+                
+                let elm = document.getElementById("UpdateFrame");
+                elm.innerHTML = 
+                    "<b>Time to update / draw: </b>" + elapsed.toFixed(2) + " milli-seconds<br>" +
+                    "<b>Frames per Second: </b>" + (1000/elapsed).toFixed(2) + "<br>" +
+                    "<b>Update() Calls Per Draw(): </b>" + numUpdatePerDraw + 
+                        " <b>Max</b> = " + mMaxUpdatePerDraw + 
+                        " <b>Avg</b> = " + (mTotalUpdates/mCount).toFixed(5) + "<br>" + 
+                    "<b>Lag Time: </b>" + lagTime.toFixed(2) + 
+                        " <b>Max</b> = " + mMaxLagTime.toFixed(2) +
+                        " <b>Avg</b> = " + (mTotalLag/mCount).toFixed(5) + " milli-seconds<br>";
+            }
+
+            function gUpdateObject(n, deleteMode)    {
+                let elm = document.getElementById("UpdateObject");
+                elm.innerHTML = 
+                    "<b>Total Num of Objects: </b>" + n + "<br>" + 
+                    "<b>Delete Mode = " + deleteMode;
+            }
+
+            function gUpdateControls(bool, interval)  {
+                let elm = document.getElementById("ExtraControls");
+                elm.innerHTML = 
+                    "<b>Extra Credit:<b><br>" + 
+                    "Press 'I' to create squares at a fixed interval<br>" +
+                    "<b>Press 'Q' to decrease interval<br>" + 
+                    "Press 'E' to increase interval<br>" +
+                    "<b>Interval Spawn = <b>" + bool + "<br>" + 
+                    "Current Interval = <b>" + interval + "<br>"; 
+            }
+
+            function gUpdateTriangle(chance, n)    {
+                let elm = document.getElementById("UpdateTriangle");
+                elm.innerHTML = 
+                    "<br>There is a chance any given group of squares will become triangles.<br>" + 
+                    "<b>Chance for Triangle: <b>" + chance.toFixed(5) + "<br>" + 
+                    "<b>Num of Triangles: <b>" + n;
+            }
+        </script>
+    </head>
+     <body>    
+        <canvas id="GLCanvas" width="640" height="480">
+            <!-- GLCanvas is the area we will draw in: a 640x480 area. -->
+            Your browser does not support the HTML5 canvas.
+            <!-- this message will show only if WebGL clearing failed -->
+        </canvas>
+        <br>
+        <div id = 'UpdateFrame'></div>
+        <hr>
+        <div id = 'UpdateObject'></div>
+        <hr>
+        <div id = 'ExtraControls'></div>
+        <div id = 'UpdateTriangle'></div>
+
+    </body>
+</html>
